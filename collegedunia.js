@@ -93,8 +93,15 @@ function dirCreate(filePath) {
 }
 
 function excelWriter(filePath, json, sheetName) {
-    let newWB = xlsx.utils.book_new();
-    let newWS = xlsx.utils.json_to_sheet(json);
+    let newWB = "";
+    let newWS = "";
+    if(fs.existsSync(filePath) == true) {
+        newWB = xlsx.readFile(filePath);
+    }
+    else {
+        newWB = xlsx.utils.book_new();
+    }
+    newWS = xlsx.utils.json_to_sheet(json);
     xlsx.utils.book_append_sheet(newWB, newWS, sheetName);
     xlsx.writeFile(newWB, filePath);
 }
