@@ -56,21 +56,21 @@ function extractCollegePage(link, name) {
     let summary = $(highlights).find("p");
     summary = $(summary[0]).text() + $(summary[1]).text().trim();
     let table = $(course).find("tr");
-    let courseName = [];
-    let fees = [];
-    let eligibility = [];
+    let courseName =  "";
+    let fees = "";
+    let eligibility = "";
     for (let i = 0; i < table.length; i++) {
         let allCol = $(table[i]).find("td");
         if(allCol) {
-            courseName[i] = $(allCol[0]).text().trim().replace("   ", " ").replace("\n", " ");
-            fees[i] = $(allCol[1]).text().trim().replace("   ", " ").replace("\n", " ");
-            eligibility[i] = $(allCol[2]).text().trim().replace("   ", " ").replace("\n", " ");
+            courseName = $(allCol[0]).text().trim().replace("   ", " ").replace("\n", " ");
+            fees = $(allCol[1]).text().trim().replace("   ", " ").replace("\n", " ");
+            eligibility = $(allCol[2]).text().trim().replace("   ", " ").replace("\n", " ");
+            processData(name, summary, courseName, fees, eligibility, i);
         }
     }
-    processData(name, summary, courseName, fees, eligibility);
 }
 
-function processData(name, summary, courseName, fees, eligibility) {
+function processData(name, summary, courseName, fees, eligibility, i) {
     let initial = name.split(' ');
     let collegename = initial[0] + ".xlsx";
     let college = path.join(CollegePath, "ChennaiColleges.xlsx");
@@ -83,7 +83,7 @@ function processData(name, summary, courseName, fees, eligibility) {
         eligibility
     }
     content.push(collegeObj);
-    excelWriter(college, content, collegename);
+    excelWriter(college, content, collegename, i);
 }
 
 function dirCreate(filePath) {
@@ -92,17 +92,25 @@ function dirCreate(filePath) {
     }
 }
 
-function excelWriter(filePath, json, sheetName) {
+function excelWriter(filePath, json, sheetName, i) {
     let newWB = "";
     let newWS = "";
     if(fs.existsSync(filePath) == true) {
         newWB = xlsx.readFile(filePath);
+        newWS = xlsx.utils.json_to_sheet(json);
+        if(i > 0) {
+            xlsx.utils.sheet_add_json(newWS, json, sheetName);
+        }
+        else {
+            xlsx.utils.book_append_sheet(newWB, newWS, sheetName);
+        }   
     }
     else {
         newWB = xlsx.utils.book_new();
+        newWS = xlsx.utils.json_to_sheet(json);
+        xlsx.utils.book_append_sheet(newWB, newWS, sheetName);
     }
-    newWS = xlsx.utils.json_to_sheet(json);
-    xlsx.utils.book_append_sheet(newWB, newWS, sheetName);
+    
     xlsx.writeFile(newWB, filePath);
 }
 
