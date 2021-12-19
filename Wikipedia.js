@@ -30,10 +30,8 @@ function extractHtml(html) {
     let $ = cheerio.load(html);
     let data = $(".mw-body-content.mw-content-ltr .mw-parser-output");
     let pgroup = data.find("p");
-    //let ligroup = data.find("li");
     let ulgroup = data.find("ul");
     let History = $(pgroup[5]).text() + $(pgroup[6]).text() + $(pgroup[7]).text() + $(pgroup[8]).text() + $(pgroup[9]).text() + $(pgroup[10]).text() + $(pgroup[11]).text();
-    //let Writing = $(ligroup[70]).text() + $(ligroup[71]).text() + $(ligroup[72]).text() + $(ligroup[73]).text() + $(ligroup[74]).text() + $(ligroup[75]).text() + $(ligroup[76]).text(); 
     let Writing = $(pgroup[12]).text() + $(ulgroup[17]).text() + $(pgroup[13]).text() + $(pgroup[14]).text() + $(pgroup[15]).text() + $(pgroup[16]).text() + $(ulgroup[18]).text();
     let Uses = $(pgroup[17]).text() + $(pgroup[18]).text() + $(pgroup[19]).text() + $(pgroup[20]).text() + $(pgroup[21]).text() + $(pgroup[22]).text();
     console.log("HISTORY:" + "\n" + History + "\n");
