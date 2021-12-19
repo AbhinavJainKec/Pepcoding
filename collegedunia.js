@@ -99,7 +99,7 @@ function excelWriter(filePath, json, sheetName, i) {
         newWB = xlsx.readFile(filePath);
         newWS = xlsx.utils.json_to_sheet(json);
         if(i > 0) {
-            xlsx.utils.sheet_add_json(newWS, json, sheetName);
+            xlsx.utils.sheet_add_json(newWS, json);
         }
         else {
             xlsx.utils.book_append_sheet(newWB, newWS, sheetName);
